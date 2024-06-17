@@ -1,8 +1,9 @@
-#include <iostream>
+#include "pch.h"
 #include <stack>
 #include <cctype>
 #include <string>
-#include "pch.h"
+#include <cmath> 
+#include <stdexcept>
 #include "framework.h"
 #include "Calculator.h"
 #include "CalculatorDoc.h"
@@ -10,27 +11,27 @@
 using namespace std;
 
 // Function to perform arithmetic operations.
-double CCalculatorView::applyOp(double a, double b, char op) {
+double CCalculatorView::applyOp(double a, double b, wchar_t op) {
     switch (op) {
-    case '+': return a + b;
-    case '-': return a - b;
-    case '*': return a * b;
-    case '/': return b ? a / b : throw invalid_argument("Division by zero.");
+    case L'+': return a + b;
+    case L'-': return a - b;
+    case L'*': return a * b;
+    case L'/': return b ? a / b : throw invalid_argument("Division by zero.");
     default: throw invalid_argument("Invalid operator.");
     }
 }
 
 // Function to return precedence of operators
-double CCalculatorView::precedence(char op) {
-    if (op == '+' || op == '-') return 1;
-    if (op == '*' || op == '/') return 2;
+double CCalculatorView::precedence(wchar_t op) {
+    if (op == L'+' || op == L'-') return 1;
+    if (op == L'*' || op == L'/') return 2;
     return 0;
 }
 
 // Function to evaluate the expression
-double CCalculatorView::evaluate(CString& expression) {
+void CCalculatorView::evaluate(CString& expression) {
     stack<double> values; // Stack to store doubleegers
-    stack<char> ops; // Stack to store operators
+    stack<wchar_t> ops; // Stack to store operators
 
     for (double i = 0; i < expression.GetLength(); i++) {
         // Current token is a whitespace, skip it
@@ -40,8 +41,15 @@ double CCalculatorView::evaluate(CString& expression) {
         else if (isdigit(expression[i])) {
             double val = 0;
             // There may be more than one digits in number
-            while (i < expression.GetLength() && isdigit(expression[i])) {
+            BOOL ifDecimal = FALSE;
+            while (i < expression.GetLength() && (isdigit(expression[i]) || expression[i] == L'.')) {
+                if (expression[i] == L'.') {
+                    ifDecimal = TRUE;
+                    i++;
+                    continue;
+                }
                 val = (val * 10) + (expression[i] - '0');
+                if (ifDecimal) val /= 10;
                 i++;
             }
             values.push(val);
@@ -62,7 +70,7 @@ double CCalculatorView::evaluate(CString& expression) {
                 double val1 = values.top();
                 values.pop();
 
-                char op = ops.top();
+                wchar_t op = ops.top();
                 ops.pop();
 
                 values.push(applyOp(val1, val2, op));
@@ -77,21 +85,28 @@ double CCalculatorView::evaluate(CString& expression) {
             // While top of 'ops' has same or greater precedence to current
             // token, which is an operator. Apply operator on top of 'ops'
             // to top two elements in values stack.
-            while (!ops.empty() && precedence(ops.top()) >= precedence(expression[i])) {
+            wchar_t opt = expression[i];
+            if (opt == L'\u00D7') {
+                opt = '*';
+            }
+            if (opt == L'\u00F7') {
+                opt = '/';
+            }
+            while (!ops.empty() && precedence(ops.top()) >= precedence(opt)) {
                 double val2 = values.top();
                 values.pop();
 
                 double val1 = values.top();
                 values.pop();
 
-                char op = ops.top();
+                wchar_t op = ops.top();
                 ops.pop();
 
                 values.push(applyOp(val1, val2, op));
             }
 
             // Push current token to 'ops'.
-            ops.push(expression[i]);
+            ops.push(opt);
         }
     }
 
@@ -103,12 +118,24 @@ double CCalculatorView::evaluate(CString& expression) {
         double val1 = values.top();
         values.pop();
 
-        char op = ops.top();
+        wchar_t op = ops.top();
         ops.pop();
 
         values.push(applyOp(val1, val2, op));
     }
 
     // Top of 'values' contains result, return it
-    return values.top();
+    ConvertResult(values.top(), expression);
 }
+
+void CCalculatorView::ConvertResult(double result, CString& input) {
+    // 如果结果转换为整数后与自身相等，则它是一个整数
+    if (floor(result) == result) {
+        input.Format(_T("%d"), static_cast<int>(result));
+    }
+    else {
+        input.Format(_T("%.12f"), result);
+    }
+}
+
+

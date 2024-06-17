@@ -44,6 +44,10 @@ BEGIN_MESSAGE_MAP(CCalculatorView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_TIMES, &CCalculatorView::OnBnClickedButtonTimes)
 	ON_BN_CLICKED(IDC_BUTTON_DIVISION, &CCalculatorView::OnBnClickedButtonDivision)
 	ON_BN_CLICKED(IDC_BUTTON_EQUAL, &CCalculatorView::OnBnClickedButtonEqual)
+	ON_EN_CHANGE(IDC_EDIT, &CCalculatorView::OnEnChangeEdit)
+	ON_BN_CLICKED(IDC_BUTTON_POINT, &CCalculatorView::OnBnClickedButtonPoint)
+	ON_BN_CLICKED(IDC_BUTTON_BACK, &CCalculatorView::OnBnClickedButtonBack)
+	ON_BN_CLICKED(IDC_BUTTON_AC, &CCalculatorView::OnBnClickedButtonAc)
 END_MESSAGE_MAP()
 
 // CCalculatorView 构造/析构
@@ -226,6 +230,12 @@ void CCalculatorView::OnBnClickedButton9()
 	UpdateData(FALSE);
 }
 
+void CCalculatorView::OnBnClickedButtonPoint()
+{
+	m_input += _T(".");
+	UpdateData(FALSE);
+}
+
 
 void CCalculatorView::OnBnClickedButtonPlus()
 {
@@ -257,5 +267,29 @@ void CCalculatorView::OnBnClickedButtonDivision()
 
 void CCalculatorView::OnBnClickedButtonEqual()
 {
-	
+	UpdateData(TRUE);
+	evaluate(m_input);
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnEnChangeEdit()
+{
+	UpdateData(TRUE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonBack()
+{
+	if (!m_input.IsEmpty()) {
+		m_input.Delete(m_input.GetLength() - 1);
+	}
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonAc()
+{
+	m_input = _T("");
+	UpdateData(FALSE);
 }

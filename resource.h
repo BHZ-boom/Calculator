@@ -101,6 +101,9 @@
 #define IDC_BUTTON_MINUS                1013
 #define IDC_BUTTON_DIVISION             1014
 #define IDC_BUTTON_TIMES                1015
+#define IDC_BUTTON_AC                   1016
+#define IDC_BUTTON_POINT                1017
+#define IDC_BUTTON_BACK                 1018
 
 // Next default values for new objects
 // 

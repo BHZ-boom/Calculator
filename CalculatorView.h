@@ -69,10 +69,18 @@ public:
 	afx_msg void OnBnClickedButtonEqual();
 	
 public: //数据处理
-	double applyOp(double a, double b, char op);
-	double precedence(char op);
-	double evaluate(CString& expression);
+	void evaluate(CString& expression);
+
+private:
+	double applyOp(double a, double b, wchar_t op);
+	double precedence(wchar_t op);
+	void ConvertResult(double result, CString& input);
 	
+public:
+	afx_msg void OnEnChangeEdit();
+	afx_msg void OnBnClickedButtonPoint();
+	afx_msg void OnBnClickedButtonBack();
+	afx_msg void OnBnClickedButtonAc();
 };
 
 #ifndef _DEBUG  // CalculatorView.cpp 中的调试版本
