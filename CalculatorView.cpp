@@ -68,6 +68,7 @@ void CCalculatorView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT, m_input);
 	DDX_Control(pDX, IDC_BUTTON_TIMES, markTimes);
 	DDX_Control(pDX, IDC_BUTTON_DIVISION, markDivision);
+	DDX_Control(pDX, IDC_CHECK_FRACTION, m_FractionMode);
 }
 
 BOOL CCalculatorView::PreCreateWindow(CREATESTRUCT& cs)
@@ -164,8 +165,6 @@ CCalculatorDoc* CCalculatorView::GetDocument() const // 非调试版本是内联
 
 
 // CCalculatorView 消息处理程序
-
-
 
 
 

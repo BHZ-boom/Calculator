@@ -188,6 +188,7 @@
     <ClInclude Include="CalculatorView.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="Fraction.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DoWithString.cpp" />
     <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="Fraction.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="pch.cpp">
