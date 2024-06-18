@@ -267,7 +267,12 @@ void CCalculatorView::OnBnClickedButtonDivision()
 void CCalculatorView::OnBnClickedButtonEqual()
 {
 	UpdateData(TRUE);
-	evaluate(m_input);
+	if (m_FractionMode.GetCheck() == BST_UNCHECKED) {
+		evaluate(m_input, 1);
+	}
+	else {
+		evaluate(m_input, 2);
+	}
 	UpdateData(FALSE);
 }
 

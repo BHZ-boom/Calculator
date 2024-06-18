@@ -69,12 +69,13 @@ public:
 	afx_msg void OnBnClickedButtonEqual();
 	
 public: //数据处理
-	void evaluate(CString& expression);
+	void evaluate(CString& expression, int mode);
 
 private:
-	double applyOp(double a, double b, wchar_t op);
+	template <typename T>
+	T applyOp(T a, T b, wchar_t op);
 	double precedence(wchar_t op);
-	void ConvertResult(double result, CString& input);
+	void ConvertDouble(double result, CString& input);
 	
 public:
 	afx_msg void OnEnChangeEdit();

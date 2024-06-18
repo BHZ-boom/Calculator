@@ -4,20 +4,22 @@
 #include <string>
 #include <cmath> 
 #include <stdexcept>
+#include <type_traits>
 #include "framework.h"
 #include "Calculator.h"
 #include "CalculatorDoc.h"
 #include "CalculatorView.h"
-using namespace std;
+
 
 // Function to perform arithmetic operations.
-double CCalculatorView::applyOp(double a, double b, wchar_t op) {
+template <typename T>
+T CCalculatorView::applyOp(T a, T b, wchar_t op) {
     switch (op) {
-    case L'+': return a + b;
-    case L'-': return a - b;
-    case L'*': return a * b;
-    case L'/': return b ? a / b : throw invalid_argument("Division by zero.");
-    default: throw invalid_argument("Invalid operator.");
+        case L'+': return a + b;
+        case L'-': return a - b;
+        case L'*': return a * b;
+        case L'/': return a / b;
+        default: throw std::invalid_argument("Invalid operator.");
     }
 }
 
@@ -29,9 +31,10 @@ double CCalculatorView::precedence(wchar_t op) {
 }
 
 // Function to evaluate the expression
-void CCalculatorView::evaluate(CString& expression) {
-    stack<double> values; // Stack to store doubleegers
-    stack<wchar_t> ops; // Stack to store operators
+void CCalculatorView::evaluate(CString& expression, int mode) {
+    std::stack<double> values; // Stack to store doubleegers
+    std::stack<Fraction> fvalues;
+    std::stack<wchar_t> ops; // Stack to store operators
 
     for (double i = 0; i < expression.GetLength(); i++) {
         // Current token is a whitespace, skip it
@@ -52,12 +55,18 @@ void CCalculatorView::evaluate(CString& expression) {
                 if (ifDecimal) val /= 10;
                 i++;
             }
-            values.push(val);
+            if (mode == 1) {
+                values.push(val);
+            }
+            else if (mode == 2) {
+                fvalues.push(Fraction(val));
+            }
+            
             i--; // since the for loop also increases i
         }
 
         // Current token is an opening brace, push it to 'ops'
-        else if (expression[i] == '(') {
+        /*else if (expression[i] == '(') {
             ops.push(expression[i]);
         }
 
@@ -79,6 +88,7 @@ void CCalculatorView::evaluate(CString& expression) {
             // pop opening brace.
             ops.pop();
         }
+        */
 
         // Current token is an operator.
         else {
@@ -93,16 +103,28 @@ void CCalculatorView::evaluate(CString& expression) {
                 opt = '/';
             }
             while (!ops.empty() && precedence(ops.top()) >= precedence(opt)) {
-                double val2 = values.top();
-                values.pop();
-
-                double val1 = values.top();
-                values.pop();
-
                 wchar_t op = ops.top();
                 ops.pop();
+                if (mode == 1) {
+                    double val1, val2;
 
-                values.push(applyOp(val1, val2, op));
+                    val2 = values.top();
+                    values.pop();
+
+                    val1 = values.top();
+                    values.pop();
+                    values.push(applyOp(val1, val2, op));
+                }
+                else {
+                    Fraction val1, val2;
+
+                    val2 = fvalues.top();
+                    fvalues.pop();
+
+                    val1 = fvalues.top();
+                    fvalues.pop();
+                    fvalues.push(applyOp(val1, val2, op));
+                } 
             }
 
             // Push current token to 'ops'.
@@ -112,30 +134,91 @@ void CCalculatorView::evaluate(CString& expression) {
 
     // Entire expression has been parsed at this point, apply remaining ops to remaining values
     while (!ops.empty()) {
-        double val2 = values.top();
-        values.pop();
-
-        double val1 = values.top();
-        values.pop();
-
         wchar_t op = ops.top();
         ops.pop();
+        if (mode == 1) {
+            double val1, val2;
 
-        values.push(applyOp(val1, val2, op));
+            val2 = values.top();
+            values.pop();
+
+            val1 = values.top();
+            values.pop();
+            values.push(applyOp(val1, val2, op));
+        }
+        else {
+            Fraction val1, val2;
+
+            val2 = fvalues.top();
+            fvalues.pop();
+
+            val1 = fvalues.top();
+            fvalues.pop();
+            fvalues.push(applyOp(val1, val2, op));
+        }
     }
 
     // Top of 'values' contains result, return it
-    ConvertResult(values.top(), expression);
+    if (mode == 1) {
+        ConvertDouble(values.top(), expression);
+    }
+    else {
+        Fraction result = fvalues.top();
+        expression.Format(_T("%d/%d"), result.up(), result.down());
+    }
+  
 }
 
-void CCalculatorView::ConvertResult(double result, CString& input) {
+
+void CCalculatorView::ConvertDouble(double result, CString& input) {
     // 如果结果转换为整数后与自身相等，则它是一个整数
     if (floor(result) == result) {
         input.Format(_T("%d"), static_cast<int>(result));
     }
     else {
         input.Format(_T("%.12f"), result);
-    }
+    } 
 }
 
 
+Fraction operator+(Fraction& left, Fraction& right) {
+    int above, below;
+    below = left.down() * right.down();
+    above = left.up() * right.down() + right.up() * left.down();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+
+Fraction operator-(Fraction& left, Fraction& right) {
+    int above, below;
+    below = left.down() * right.down();
+    above = left.up() * right.down() - right.up() * left.down();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+
+Fraction operator*(Fraction& left, Fraction& right) {
+    int above, below;
+    below = left.down() * right.down();
+    above = left.up() * right.up();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+
+Fraction operator/(Fraction& left, Fraction& right) {
+    int above, below;
+    below = left.down() * right.up();
+    above = left.up() * right.down();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+    
+        
+   
