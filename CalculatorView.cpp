@@ -239,34 +239,33 @@ void CCalculatorView::OnBnClickedButtonPoint()
 void CCalculatorView::OnBnClickedButtonPlus()
 {
 	m_input += _T("+");
-	UpdateData(FALSE);
+	OnEnChangeEdit();
 }
 
 
 void CCalculatorView::OnBnClickedButtonMinus()
 {
 	m_input += _T("-");
-	UpdateData(FALSE);
+	OnEnChangeEdit();
 }
 
 
 void CCalculatorView::OnBnClickedButtonTimes()
 {
 	m_input += _T("\u00D7");
-	UpdateData(FALSE);
+	OnEnChangeEdit();
 }
 
 
 void CCalculatorView::OnBnClickedButtonDivision()
 {
 	m_input += _T("\u00F7");
-	UpdateData(FALSE);
+	OnEnChangeEdit();
 }
 
 
 void CCalculatorView::OnBnClickedButtonEqual()
 {
-	UpdateData(TRUE);
 	if (m_FractionMode.GetCheck() == BST_UNCHECKED) {
 		evaluate(m_input, 1);
 	}
@@ -279,7 +278,6 @@ void CCalculatorView::OnBnClickedButtonEqual()
 
 void CCalculatorView::OnEnChangeEdit()
 {
-	UpdateData(TRUE);
 	int length = m_input.GetLength();
 	wchar_t last = m_input[length - 1], second = m_input[length - 2];
 	if (second == L'+' || second == L'\u00D7' || second == L'\u00F7') {
@@ -295,6 +293,7 @@ void CCalculatorView::OnEnChangeEdit()
 			m_input.Delete(length - 2);
 		}
 	}
+	UpdateData(FALSE);
 }
 
 
