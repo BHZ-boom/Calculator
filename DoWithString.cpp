@@ -3,6 +3,10 @@
 #include <cctype>
 #include <string>
 #include <cmath> 
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <locale>
 #include <stdexcept>
 #include <type_traits>
 #include "framework.h"
@@ -68,17 +72,17 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
         }
 
         // Current token is an opening brace, push it to 'ops'
-        /*else if (expression[i] == '(') {
+        else if (expression[i] == '(') {
             ops.push(expression[i]);
         }
 
         // Closing brace encountered, solve entire brace
         else if (expression[i] == ')') {
             while (!ops.empty() && ops.top() != '(') {
-                double val2 = values.top();
+                long double val2 = values.top();
                 values.pop();
 
-                double val1 = values.top();
+                long double val1 = values.top();
                 values.pop();
 
                 wchar_t op = ops.top();
@@ -90,7 +94,7 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
             // pop opening brace.
             ops.pop();
         }
-        */
+        
 
         // Current token is an operator.
         else {
@@ -166,7 +170,13 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
     }
     else {
         Fraction result = fvalues.top();
-        expression.Format(_T("%lld/%lld"), result.up(), result.down());
+        if (result.down() == 1) {
+            expression.Format(_T("%lld"), result.up());
+        }
+        else {
+            expression.Format(_T("%lld/%lld"), result.up(), result.down());
+        }
+       
     }
   
 }
@@ -174,11 +184,26 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
 
 void CCalculatorView::ConvertDouble(long double result, CString& input) {
     // 如果结果转换为整数后与自身相等，则它是一个整数
+    BOOL intPart = FALSE;
     if (floor(result) == result) {
         input.Format(_T("%lld"), static_cast<long long>(result));
+        int i = input.GetLength();
+        while (i > 3) {
+            input.Insert(i - 3, L',');
+            i -= 3;
+        }
     }
     else {
         input.Format(_T("%f"), result);
+        for (int i = input.GetLength() - 1; i > 0; i--) {
+            if (input[i] == L'.') intPart = TRUE;
+            if (intPart) {
+                while (i > 3) {
+                    input.Insert(i - 3, L',');
+                    i -= 3;
+                }
+            }
+        }
     } 
 }
 
