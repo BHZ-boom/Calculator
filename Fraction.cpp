@@ -6,10 +6,10 @@
 
 
 void Fraction::gcd() {
-    int a = this->m_numerator;
-    int b = this->m_denominator;
+    long long a = this->m_numerator;
+    long long b = this->m_denominator;
     while (b != 0) {
-        int temp = b;
+        long long temp = b;
         b = a % b;
         a = temp;
     }
@@ -18,7 +18,7 @@ void Fraction::gcd() {
 }
 
 
-Fraction::Fraction(int above, int below){
+Fraction::Fraction(long long above, long long below){
     if (below) {
         this->m_denominator = below;
     }
@@ -39,25 +39,26 @@ Fraction::Fraction(const Fraction& rhs) {
     m_numerator = rhs.m_numerator;
 }
 
-Fraction::Fraction(double num) {
-    std::string numStr = std::to_string(num);
-    // 查找小数点的位置
-    size_t decimalPos = numStr.find('.');
-    if (decimalPos == std::string::npos) {
+Fraction::Fraction(long double decimal) {
+    long long intPart = static_cast<long long>(decimal);
+    if (intPart == decimal) {
         // 没有找到小数点，说明是整数
         m_denominator = 1;
-        m_numerator = static_cast<int>(num);
+        m_numerator = intPart;
     }
     else {
-        int countDecimalPlaces = numStr.size() - decimalPos - 1;
-        m_denominator = pow(10, countDecimalPlaces);
-        m_numerator = static_cast<int>(num * pow(10, countDecimalPlaces));
+        double intPart;
+        double fracPart = modf(decimal, &intPart);
+        const long precision = 1000000; // 定义精度
+        this->m_numerator = static_cast<long long>(round((intPart + fracPart) * precision));
+        this->m_denominator = precision;
+
     }
     this->gcd();
 }
 
 
-void Fraction::reset(int above, int below) {
+void Fraction::reset(long long above, long long below) {
     this->m_numerator = above;
     if (below) {
         this->m_denominator = below;
@@ -68,19 +69,19 @@ void Fraction::reset(int above, int below) {
 }
 
 
-int Fraction::up() {
+long long Fraction::up() {
     return m_numerator;
 }
 
 
-int Fraction::down() {
+long long Fraction::down() {
     return m_denominator;
 }
 
 
 /*
 Fraction operator+(Fraction& left, Fraction& right) {
-    int above, below;
+    long above, below;
     below = left.down() * right.down();
     above = left.up() * right.down() + right.up() * left.down();
     Fraction result(above, below);
@@ -90,7 +91,7 @@ Fraction operator+(Fraction& left, Fraction& right) {
 
 
 Fraction operator-(Fraction& left, Fraction& right) {
-    int above, below;
+    long above, below;
     below = left.down() * right.down();
     above = left.up() * right.down() - right.up() * left.down();
     Fraction result(above, below);
@@ -100,7 +101,7 @@ Fraction operator-(Fraction& left, Fraction& right) {
 
 
 Fraction operator*(Fraction& left, Fraction& right) {
-    int above, below;
+    long above, below;
     below = left.down() * right.down();
     above = left.up() * right.up();
     Fraction result(above, below);
@@ -110,7 +111,7 @@ Fraction operator*(Fraction& left, Fraction& right) {
 
 
 Fraction operator/(Fraction& left, Fraction& right) {
-    int above, below;
+    long above, below;
     below = left.down() * right.up();
     above = left.up() * right.down();
     Fraction result(above, below);

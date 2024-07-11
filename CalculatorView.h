@@ -74,8 +74,8 @@ public: //数据处理
 private:
 	template <typename T>
 	T applyOp(T a, T b, wchar_t op);
-	double precedence(wchar_t op);
-	void ConvertDouble(double result, CString& input);
+	long double precedence(wchar_t op);
+	void ConvertDouble(long double result, CString& input);
 	
 public:
 	afx_msg void OnEnChangeEdit();

@@ -24,7 +24,7 @@ T CCalculatorView::applyOp(T a, T b, wchar_t op) {
 }
 
 // Function to return precedence of operators
-double CCalculatorView::precedence(wchar_t op) {
+long double CCalculatorView::precedence(wchar_t op) {
     if (op == L'+' || op == L'-') return 1;
     if (op == L'*' || op == L'/') return 2;
     return 0;
@@ -32,19 +32,20 @@ double CCalculatorView::precedence(wchar_t op) {
 
 // Function to evaluate the expression
 void CCalculatorView::evaluate(CString& expression, int mode) {
-    std::stack<double> values; // Stack to store doubleegers
+    std::stack<long double> values; // Stack to store doubleegers
     std::stack<Fraction> fvalues;
     std::stack<wchar_t> ops; // Stack to store operators
 
-    for (double i = 0; i < expression.GetLength(); i++) {
+    for (int i = 0; i < expression.GetLength(); i++) {
         // Current token is a whitespace, skip it
         if (expression[i] == ' ') continue;
 
         // Current token is a number, push it to stack for numbers
         else if (isdigit(expression[i])) {
-            double val = 0;
+            long double val = 0;
             // There may be more than one digits in number
             BOOL ifDecimal = FALSE;
+            long  decimalDigit = 1; //小数位数
             while (i < expression.GetLength() && (isdigit(expression[i]) || expression[i] == L'.')) {
                 if (expression[i] == L'.') {
                     ifDecimal = TRUE;
@@ -52,9 +53,10 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                     continue;
                 }
                 val = (val * 10) + (expression[i] - '0');
-                if (ifDecimal) val /= 10;
+                if (ifDecimal) decimalDigit *= 10;
                 i++;
             }
+            val /= decimalDigit;
             if (mode == 1) {
                 values.push(val);
             }
@@ -106,7 +108,7 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                 wchar_t op = ops.top();
                 ops.pop();
                 if (mode == 1) {
-                    double val1, val2;
+                    long double val1, val2;
 
                     val2 = values.top();
                     values.pop();
@@ -137,7 +139,7 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
         wchar_t op = ops.top();
         ops.pop();
         if (mode == 1) {
-            double val1, val2;
+            long double val1, val2;
 
             val2 = values.top();
             values.pop();
@@ -164,25 +166,25 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
     }
     else {
         Fraction result = fvalues.top();
-        expression.Format(_T("%d/%d"), result.up(), result.down());
+        expression.Format(_T("%lld/%lld"), result.up(), result.down());
     }
   
 }
 
 
-void CCalculatorView::ConvertDouble(double result, CString& input) {
+void CCalculatorView::ConvertDouble(long double result, CString& input) {
     // 如果结果转换为整数后与自身相等，则它是一个整数
     if (floor(result) == result) {
-        input.Format(_T("%d"), static_cast<int>(result));
+        input.Format(_T("%lld"), static_cast<long long>(result));
     }
     else {
-        input.Format(_T("%.12f"), result);
+        input.Format(_T("%f"), result);
     } 
 }
 
 
 Fraction operator+(Fraction& left, Fraction& right) {
-    int above, below;
+    long long above, below;
     below = left.down() * right.down();
     above = left.up() * right.down() + right.up() * left.down();
     Fraction result(above, below);
@@ -192,7 +194,7 @@ Fraction operator+(Fraction& left, Fraction& right) {
 
 
 Fraction operator-(Fraction& left, Fraction& right) {
-    int above, below;
+    long long above, below;
     below = left.down() * right.down();
     above = left.up() * right.down() - right.up() * left.down();
     Fraction result(above, below);
@@ -202,7 +204,7 @@ Fraction operator-(Fraction& left, Fraction& right) {
 
 
 Fraction operator*(Fraction& left, Fraction& right) {
-    int above, below;
+    long long above, below;
     below = left.down() * right.down();
     above = left.up() * right.up();
     Fraction result(above, below);
@@ -212,7 +214,7 @@ Fraction operator*(Fraction& left, Fraction& right) {
 
 
 Fraction operator/(Fraction& left, Fraction& right) {
-    int above, below;
+    long long above, below;
     below = left.down() * right.up();
     above = left.up() * right.down();
     Fraction result(above, below);
