@@ -77,3 +77,45 @@ long long Fraction::up() {
 long long Fraction::down() {
     return m_denominator;
 }
+
+
+/*
+Fraction operator+(Fraction& left, Fraction& right) {
+    long above, below;
+    below = left.down() * right.down();
+    above = left.up() * right.down() + right.up() * left.down();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+
+Fraction operator-(Fraction& left, Fraction& right) {
+    long above, below;
+    below = left.down() * right.down();
+    above = left.up() * right.down() - right.up() * left.down();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+
+Fraction operator*(Fraction& left, Fraction& right) {
+    long above, below;
+    below = left.down() * right.down();
+    above = left.up() * right.up();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+
+Fraction operator/(Fraction& left, Fraction& right) {
+    long above, below;
+    below = left.down() * right.up();
+    above = left.up() * right.down();
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+*/

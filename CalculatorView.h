@@ -83,10 +83,6 @@ public:
 	afx_msg void OnBnClickedButtonBack();
 	afx_msg void OnBnClickedButtonAc();
 	CButton m_FractionMode;
-	afx_msg void OnBnClickedButtonslash();
-	afx_msg void OnBnClickedButtonAdvance();
-	afx_msg void OnBnClickedCheckFraction();
-	afx_msg void OnStatDescribe();
 };
 
 #ifndef _DEBUG  // CalculatorView.cpp 中的调试版本

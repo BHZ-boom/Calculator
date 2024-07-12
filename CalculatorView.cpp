@@ -4,8 +4,6 @@
 
 #include "pch.h"
 #include "framework.h"
-#include "CDescribeStat.h"
-#include "CRegress.h"
 // SHARED_HANDLERS 可以在实现预览、缩略图和搜索筛选器句柄的
 // ATL 项目中进行定义，并允许与该项目共享文档代码。
 #ifndef SHARED_HANDLERS
@@ -50,10 +48,6 @@ BEGIN_MESSAGE_MAP(CCalculatorView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_POINT, &CCalculatorView::OnBnClickedButtonPoint)
 	ON_BN_CLICKED(IDC_BUTTON_BACK, &CCalculatorView::OnBnClickedButtonBack)
 	ON_BN_CLICKED(IDC_BUTTON_AC, &CCalculatorView::OnBnClickedButtonAc)
-	ON_BN_CLICKED(IDC_BUTTON_slash, &CCalculatorView::OnBnClickedButtonslash)
-	ON_BN_CLICKED(IDC_BUTTON_ADVANCE, &CCalculatorView::OnBnClickedButtonAdvance)
-	ON_BN_CLICKED(IDC_CHECK_FRACTION, &CCalculatorView::OnBnClickedCheckFraction)
-	ON_COMMAND(ID_STAT_DESCRIBE, &CCalculatorView::OnStatDescribe)
 END_MESSAGE_MAP()
 
 // CCalculatorView 构造/析构
@@ -101,7 +95,6 @@ void CCalculatorView::OnInitialUpdate()
 
 	markTimes.SetWindowText(_T("\u00D7"));
 	markDivision.SetWindowTextW(_T("\u00F7"));
-	GetDlgItem(IDC_BUTTON_slash)->ShowWindow(SW_HIDE);
 }
 
 
@@ -242,12 +235,6 @@ void CCalculatorView::OnBnClickedButtonPoint()
 	UpdateData(FALSE);
 }
 
-void CCalculatorView::OnBnClickedButtonslash()
-{
-	m_input += _T("/");
-	UpdateData(FALSE);
-}
-
 
 void CCalculatorView::OnBnClickedButtonPlus()
 {
@@ -323,35 +310,4 @@ void CCalculatorView::OnBnClickedButtonAc()
 {
 	m_input = _T("");
 	UpdateData(FALSE);
-}
-
-
-void CCalculatorView::OnBnClickedButtonAdvance()
-{
-	
-}
-
-
-void CCalculatorView::OnBnClickedCheckFraction()
-{
-	// 检查控件当前是否可见
-	CWnd * pControl = GetDlgItem(IDC_BUTTON_slash);
-	if (pControl && pControl->IsWindowVisible())
-	{
-		pControl->ShowWindow(SW_HIDE);  // 当前可见则隐藏
-	}
-	else
-	{
-		pControl->ShowWindow(SW_SHOW);  // 当前隐藏则显示
-	}
-}
-
-
-void CCalculatorView::OnStatDescribe()
-{
-	CDescribeStat ds;
-	if (ds.DoModal() == IDOK) {
-		// 用户点击了OK，处理数据
-	}
-
 }
