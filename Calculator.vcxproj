@@ -96,6 +96,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -186,7 +187,9 @@
     <ClInclude Include="Calculator.h" />
     <ClInclude Include="CalculatorDoc.h" />
     <ClInclude Include="CalculatorView.h" />
+    <ClInclude Include="CDescribeStat.h" />
     <ClInclude Include="ClassView.h" />
+    <ClInclude Include="CRegress.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="Fraction.h" />
     <ClInclude Include="framework.h" />
@@ -202,7 +205,9 @@
     <ClCompile Include="Calculator.cpp" />
     <ClCompile Include="CalculatorDoc.cpp" />
     <ClCompile Include="CalculatorView.cpp" />
+    <ClCompile Include="CDescribeStat.cpp" />
     <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="CRegress.cpp" />
     <ClCompile Include="DoWithString.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="Fraction.cpp" />
