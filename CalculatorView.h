@@ -87,6 +87,7 @@ public:
 	afx_msg void OnBnClickedButtonAdvance();
 	afx_msg void OnBnClickedCheckFraction();
 	afx_msg void OnStatDescribe();
+	afx_msg void OnBnClickedButtonFile();
 };
 
 #ifndef _DEBUG  // CalculatorView.cpp 中的调试版本

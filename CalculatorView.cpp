@@ -54,6 +54,7 @@ BEGIN_MESSAGE_MAP(CCalculatorView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_ADVANCE, &CCalculatorView::OnBnClickedButtonAdvance)
 	ON_BN_CLICKED(IDC_CHECK_FRACTION, &CCalculatorView::OnBnClickedCheckFraction)
 	ON_COMMAND(ID_STAT_DESCRIBE, &CCalculatorView::OnStatDescribe)
+	ON_BN_CLICKED(IDC_BUTTON_FILE, &CCalculatorView::OnBnClickedButtonFile)
 END_MESSAGE_MAP()
 
 // CCalculatorView 构造/析构
@@ -354,4 +355,10 @@ void CCalculatorView::OnStatDescribe()
 		// 用户点击了OK，处理数据
 	}
 
+}
+
+
+void CCalculatorView::OnBnClickedButtonFile()
+{
+	
 }

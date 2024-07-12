@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 #include <afxdb.h>
+#include <math.h>
 
 // CDescribeStat 对话框
 
@@ -24,4 +25,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedButtonFile();
+	
+	CListCtrl m_ListData;
 };
