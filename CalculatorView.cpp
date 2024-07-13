@@ -41,6 +41,8 @@ BEGIN_MESSAGE_MAP(CCalculatorView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_5, &CCalculatorView::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON_8, &CCalculatorView::OnBnClickedButton8)
 	ON_BN_CLICKED(IDC_BUTTON_9, &CCalculatorView::OnBnClickedButton9)
+	ON_BN_CLICKED(IDC_BUTTON_E, &CCalculatorView::OnBnClickedButtonE)
+	ON_BN_CLICKED(IDC_BUTTON_Pi, &CCalculatorView::OnBnClickedButtonPi)
 	ON_BN_CLICKED(IDC_BUTTON_PLUS, &CCalculatorView::OnBnClickedButtonPlus)
 	ON_BN_CLICKED(IDC_BUTTON_MINUS, &CCalculatorView::OnBnClickedButtonMinus)
 	ON_BN_CLICKED(IDC_BUTTON_TIMES, &CCalculatorView::OnBnClickedButtonTimes)
@@ -54,12 +56,16 @@ BEGIN_MESSAGE_MAP(CCalculatorView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_ADVANCE, &CCalculatorView::OnBnClickedButtonAdvance)
 	ON_BN_CLICKED(IDC_CHECK_FRACTION, &CCalculatorView::OnBnClickedCheckFraction)
 	ON_COMMAND(ID_STAT_DESCRIBE, &CCalculatorView::OnStatDescribe)
-	
-	
-	
 	ON_COMMAND(ID_STAT_MATRIX, &CCalculatorView::OnStatMatrix)
 	ON_BN_CLICKED(IDC_BUTTON_RIGHTP, &CCalculatorView::OnBnClickedButtonRightp)
 	ON_BN_CLICKED(IDC_BUTTON_LEFTP, &CCalculatorView::OnBnClickedButtonLeftp)
+	ON_BN_CLICKED(IDC_BUTTON_F, &CCalculatorView::OnBnClickedButtonF)
+	ON_BN_CLICKED(IDC_BUTTON_Pow, &CCalculatorView::OnBnClickedButtonPow)
+	ON_BN_CLICKED(IDC_BUTTON_Ln, &CCalculatorView::OnBnClickedButtonLn)
+	ON_BN_CLICKED(IDC_BUTTON_Lg, &CCalculatorView::OnBnClickedButtonLg)
+	ON_BN_CLICKED(IDC_BUTTON_Sin, &CCalculatorView::OnBnClickedButtonSin)
+	ON_BN_CLICKED(IDC_BUTTON_Cos, &CCalculatorView::OnBnClickedButtonCos)
+	ON_BN_CLICKED(IDC_BUTTON_Tan, &CCalculatorView::OnBnClickedButtonTan)
 END_MESSAGE_MAP()
 
 // CCalculatorView 构造/析构
@@ -108,6 +114,17 @@ void CCalculatorView::OnInitialUpdate()
 	markTimes.SetWindowText(_T("\u00D7"));
 	markDivision.SetWindowTextW(_T("\u00F7"));
 	GetDlgItem(IDC_BUTTON_slash)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Sin)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Cos)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Tan)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Ln)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Pow)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_F)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Pi)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_E)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_LEFTP)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_RIGHTP)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_Lg)->ShowWindow(SW_HIDE);
 }
 
 
@@ -344,16 +361,10 @@ void CCalculatorView::OnBnClickedButtonLeftp()
 	UpdateData(FALSE);
 }
 
-void CCalculatorView::OnBnClickedButtonAdvance()
-{
-	
-}
-
-
-void CCalculatorView::OnBnClickedCheckFraction()
+void CCalculatorView::checkVisibility(int ID)
 {
 	// 检查控件当前是否可见
-	CWnd * pControl = GetDlgItem(IDC_BUTTON_slash);
+	CWnd* pControl = GetDlgItem(ID);
 	if (pControl && pControl->IsWindowVisible())
 	{
 		pControl->ShowWindow(SW_HIDE);  // 当前可见则隐藏
@@ -362,6 +373,28 @@ void CCalculatorView::OnBnClickedCheckFraction()
 	{
 		pControl->ShowWindow(SW_SHOW);  // 当前隐藏则显示
 	}
+}
+
+void CCalculatorView::OnBnClickedButtonAdvance()
+{
+	checkVisibility(IDC_BUTTON_Sin);
+	checkVisibility(IDC_BUTTON_Cos);
+	checkVisibility(IDC_BUTTON_Tan);
+	checkVisibility(IDC_BUTTON_Ln);
+	checkVisibility(IDC_BUTTON_Pow);
+	checkVisibility(IDC_BUTTON_F);
+	checkVisibility(IDC_BUTTON_Pi);
+	checkVisibility(IDC_BUTTON_E);
+	checkVisibility(IDC_BUTTON_LEFTP);
+	checkVisibility(IDC_BUTTON_RIGHTP);
+	checkVisibility(IDC_BUTTON_Lg);
+
+}
+
+
+void CCalculatorView::OnBnClickedCheckFraction()
+{
+	checkVisibility(IDC_BUTTON_slash);
 }
 
 
@@ -380,6 +413,68 @@ void CCalculatorView::OnStatMatrix()
 	if (mm.DoModal() == IDOK) {
 		// 用户点击了OK，处理数据
 	}
+}
+
+void CCalculatorView::OnBnClickedButtonE()
+{
+	m_input += _T("e");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonPi()
+{
+	m_input += _T("π");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonF()
+{
+	m_input += _T("!");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonPow()
+{
+	m_input += _T("^");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonLn()
+{
+	m_input += _T("ln");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonLg()
+{
+	m_input += _T("lg");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonSin()
+{
+	m_input += _T("sin");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonCos()
+{
+	m_input += _T("cos");
+	UpdateData(FALSE);
+}
+
+
+void CCalculatorView::OnBnClickedButtonTan()
+{
+	m_input += _T("tan");
+	UpdateData(FALSE);
 }
 
 

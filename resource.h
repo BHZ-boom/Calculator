@@ -113,11 +113,20 @@
 #define IDC_BUTTON_ADVANCE              1021
 #define IDC_BUTTON1                     1022
 #define IDC_BUTTON_FILE                 1022
+#define IDC_BUTTON_E                    1022
 #define IDC_BUTTON_RIGHTP               1023
 #define IDC_BUTTON_MUL                  1024
 #define IDC_BUTTON3                     1024
+#define IDC_BUTTON_Pi                   1024
 #define IDC_BUTTON_LEFTP                1025
+#define IDC_BUTTON_F                    1026
+#define IDC_BUTTON_Pow                  1027
+#define IDC_BUTTON_Lg                   1028
+#define IDC_BUTTON_Ln                   1029
 #define IDC_STATIC_MEAN                 1030
+#define IDC_BUTTON_Tan                  1030
+#define IDC_BUTTON_Cos                  1031
+#define IDC_BUTTON_Sin                  1032
 #define IDC_LIST_DATA                   1035
 #define IDC_EDIT1                       1039
 #define IDC_EDIT2                       1040
@@ -125,6 +134,8 @@
 #define IDC_STATIC_A2                   1042
 #define IDC_EDIT3                       1043
 #define IDC_STATIC_A3                   1044
+#define IDC_BUTTON2                     1044
+#define IDC_BUTTON_BEGIN                1044
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_STAT_DESCRIBE                32773
@@ -138,7 +149,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1042
+#define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

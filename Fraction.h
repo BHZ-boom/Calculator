@@ -18,5 +18,11 @@ public:
 	friend Fraction operator-(const Fraction& left, const Fraction& right);
 	friend Fraction operator*(const Fraction& left, const Fraction& right);
 	friend Fraction operator/(const Fraction& left, const Fraction& right);
+	friend Fraction pow(Fraction& left, Fraction& right);
+	friend Fraction log(Fraction& right);
+	friend Fraction log10(Fraction& right);
+	friend Fraction sin(Fraction& right);
+	friend Fraction cos(Fraction& right);
+	friend Fraction tan(Fraction& right);
 };
 

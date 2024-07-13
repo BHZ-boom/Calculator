@@ -13,7 +13,17 @@
 #include "Calculator.h"
 #include "CalculatorDoc.h"
 #include "CalculatorView.h"
+#define E     L"2.7182818"
+#define Pi    L"3.1415926"
 
+long double factorial(long double n) {
+    if (n == 0) {
+        return 1;
+    }
+    else {
+        return n * factorial(n - 1);
+    }
+}
 
 // Function to perform arithmetic operations.
 template <typename T>
@@ -23,6 +33,12 @@ T CCalculatorView::applyOp(T a, T b, wchar_t op) {
         case L'-': return a - b;
         case L'*': return a * b;
         case L'/': return a / b;
+        case L'^':return pow(a, b);
+        case L'n':return log(a);
+        case L'g':return log10(a);
+        case L's':return sin(a);
+        case L'c':return cos(a);
+        case L't':return tan(a);
         default: throw std::invalid_argument("Invalid operator.");
     }
 }
@@ -31,11 +47,77 @@ T CCalculatorView::applyOp(T a, T b, wchar_t op) {
 long double CCalculatorView::precedence(wchar_t op) {
     if (op == L'+' || op == L'-') return 1;
     if (op == L'*' || op == L'/') return 2;
+    if (op == L'n' || op == L'g' || op == L's' || op == L'c' || op == L't') return 3;
+    if (op == L'^')return 4;
     return 0;
 }
 
 // Function to evaluate the expression
 void CCalculatorView::evaluate(CString& expression, int mode) {
+    for (int i = 0; i < expression.GetLength(); i++) {
+        if (i < expression.GetLength() - 1) {
+            if (expression[i] == 'l') {
+                expression.Delete(i);
+                if (i != 0 && isdigit(expression[i - 1])) {
+                    expression.Insert(i, L"*");
+                }
+            }
+        }
+        if (i < expression.GetLength() - 2) {
+            if (expression[i] == 's' && expression[i + 1] == 'i' && expression[i + 2] == 'n') {
+                expression.Delete(i + 2);
+                expression.Delete(i + 1);
+                if (i != 0 && isdigit(expression[i - 1])) {
+                    expression.Insert(i, L"*");
+                }
+            }
+            if (expression[i] == 'c' && expression[i + 1] == 'o' && expression[i + 2] == 's') {
+                expression.Delete(i + 2);
+                expression.Delete(i + 1);
+                if (i != 0 && isdigit(expression[i - 1])) {
+                    expression.Insert(i, L"*");
+                }
+            }
+            if (expression[i] == 't' && expression[i + 1] == 'a' && expression[i + 2] == 'n') {
+                expression.Delete(i + 2);
+                expression.Delete(i + 1);
+                if (i != 0 && isdigit(expression[i - 1])) {
+                    expression.Insert(i, L"*");
+                }
+            }
+        }
+
+        if (expression[i] == 'e') {
+            if (i == 0) {
+                expression.Delete(i);
+                expression.Insert(i, E);
+            }
+            else if (isdigit(expression[i - 1])) {
+                expression.Delete(i);
+                expression.Insert(i, L"*");
+                expression.Insert(i + 1, E);
+            }
+            else {
+                expression.Delete(i);
+                expression.Insert(i, E);
+            }
+        }
+        if (expression[i] == L'\u03C0') {
+            if (i == 0) {
+                expression.Delete(i);
+                expression.Insert(i, Pi);
+            }
+            else if (isdigit(expression[i - 1])) {
+                expression.Delete(i);
+                expression.Insert(i, L"*");
+                expression.Insert(i + 1, Pi);
+            }
+            else {
+                expression.Delete(i);
+                expression.Insert(i, Pi);
+            }
+        }
+    }
     std::stack<long double> values; // Stack to store doubleegers
     std::stack<Fraction> fvalues;
     std::stack<wchar_t> ops; // Stack to store operators
@@ -46,7 +128,7 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
 
         // Current token is a number, push it to stack for numbers
         else if (isdigit(expression[i])) {
-            long double val = 0;
+            long double val = 0,val1=0;
             // There may be more than one digits in number
             BOOL ifDecimal = FALSE;
             long  decimalDigit = 1; //小数位数
@@ -65,7 +147,28 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                 values.push(val);
             }
             else if (mode == 2) {
-                fvalues.push(Fraction(val));
+
+                if (expression[i] == '/') {
+                    i++;
+                    ifDecimal = FALSE;
+                    decimalDigit = 1; 
+                    while (i < expression.GetLength() && (isdigit(expression[i]) || expression[i] == L'.')) {
+                        if (expression[i] == L'.') {
+                            ifDecimal = TRUE;
+                            i++;
+                            continue;
+                        }
+                        val1 = (val1 * 10) + (expression[i] - '0');
+                        if (ifDecimal) decimalDigit *= 10;
+                        i++;
+                    }
+                    val1 /= decimalDigit;
+                    fvalues.push(Fraction(val / val1));
+                }
+                else {
+                    fvalues.push(Fraction(val));
+                }
+           
             }
             
             i--; // since the for loop also increases i
@@ -94,7 +197,11 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
             // pop opening brace.
             ops.pop();
         }
-        
+        else if (expression[i] == '!') 
+        {
+            long double val = values.top();
+            values.push(factorial(val));
+        }
 
         // Current token is an operator.
         else {
@@ -112,24 +219,41 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                 wchar_t op = ops.top();
                 ops.pop();
                 if (mode == 1) {
-                    long double val1, val2;
+                    if (op == L'n' || op == L'g' || op == L's' || op == L'c' || op == L't') {
+                        long double num = values.top();
+                        values.pop();
+                        values.push(applyOp(num, (long double)0, op));
+                    }
+                    else
+                    {
+                        long double val1, val2;
 
-                    val2 = values.top();
-                    values.pop();
+                        val2 = values.top();
+                        values.pop();
 
-                    val1 = values.top();
-                    values.pop();
-                    values.push(applyOp(val1, val2, op));
+                        val1 = values.top();
+                        values.pop();
+                        values.push(applyOp(val1, val2, op));
+                    }
                 }
                 else {
-                    Fraction val1, val2;
+                    if (op == L'n' || op == L'g' || op == L's' || op == L'c' || op == L't') {
+                        Fraction val;
+                        val = fvalues.top();
+                        fvalues.pop();
+                        fvalues.push(applyOp(val, (Fraction)((long double)1.0), op));
+                    }
+                    else
+                    {
+                        Fraction val1, val2;
 
-                    val2 = fvalues.top();
-                    fvalues.pop();
+                        val2 = fvalues.top();
+                        fvalues.pop();
 
-                    val1 = fvalues.top();
-                    fvalues.pop();
-                    fvalues.push(applyOp(val1, val2, op));
+                        val1 = fvalues.top();
+                        fvalues.pop();
+                        fvalues.push(applyOp(val1, val2, op));
+                    }
                 } 
             }
 
@@ -143,24 +267,41 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
         wchar_t op = ops.top();
         ops.pop();
         if (mode == 1) {
-            long double val1, val2;
+            if (op == L'n' || op == L'g' || op == L's' || op == L'c' || op == L't') {
+                long double num = values.top();
+                values.pop();
+                values.push(applyOp(num, (long double)0, op));
+            }
+            else
+            {
+                long double val1, val2;
 
-            val2 = values.top();
-            values.pop();
+                val2 = values.top();
+                values.pop();
 
-            val1 = values.top();
-            values.pop();
-            values.push(applyOp(val1, val2, op));
+                val1 = values.top();
+                values.pop();
+                values.push(applyOp(val1, val2, op));
+            }
         }
         else {
-            Fraction val1, val2;
+            if (op == L'n' || op == L'g' || op == L's' || op == L'c' || op == L't') {
+                Fraction val;
+                val = fvalues.top();
+                fvalues.pop();
+                fvalues.push(applyOp(val, (Fraction)((long double)1.0), op));
+            }
+            else
+            {
+                Fraction val1, val2;
 
-            val2 = fvalues.top();
-            fvalues.pop();
+                val2 = fvalues.top();
+                fvalues.pop();
 
-            val1 = fvalues.top();
-            fvalues.pop();
-            fvalues.push(applyOp(val1, val2, op));
+                val1 = fvalues.top();
+                fvalues.pop();
+                fvalues.push(applyOp(val1, val2, op));
+            }
         }
     }
 
@@ -207,6 +348,39 @@ void CCalculatorView::ConvertDouble(long double result, CString& input) {
     } 
 }
 
+Fraction pow(Fraction& left, Fraction& right) {
+    long long above, below;
+    below = pow(left.down(), right.up() / right.down());
+    above = pow(left.up(), right.up() / right.down());
+    Fraction result(above, below);
+    result.gcd();
+    return result;
+}
+
+Fraction log(Fraction& right) {
+    long double a = log(right.up()) - log(right.down());
+    return (Fraction(a));
+}
+
+Fraction log10(Fraction& right) {
+    long double a = log10(right.up()) - log10(right.down());
+    return (Fraction(a));
+}
+
+Fraction sin(Fraction& right) {
+    long double a = sin((long double)right.up() / right.down());
+    return (Fraction(a));
+}
+
+Fraction cos(Fraction& right) {
+    long double a = cos((long double)right.up() / right.down());
+    return (Fraction(a));
+}
+
+Fraction tan(Fraction& right) {
+    long double a = tan((long double)right.up() / right.down());
+    return (Fraction(a));
+}
 
 Fraction operator+(Fraction& left, Fraction& right) {
     long long above, below;
@@ -246,6 +420,8 @@ Fraction operator/(Fraction& left, Fraction& right) {
     result.gcd();
     return result;
 }
+
+
     
         
    

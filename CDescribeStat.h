@@ -28,4 +28,10 @@ public:
 	afx_msg void OnBnClickedButtonFile();
 	
 	CListCtrl m_ListData;
+	CListBox m_listBoxTables;
+	afx_msg void OnEnChangeEdit1();
+	
+	CString m_dbLink;
+	afx_msg void OnBnClickedButtonBegin();
+	CString m_sheetName;
 };

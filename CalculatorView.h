@@ -92,6 +92,16 @@ public:
 	afx_msg void OnStatMatrix();
 	afx_msg void OnBnClickedButtonRightp();
 	afx_msg void OnBnClickedButtonLeftp();
+	afx_msg void OnBnClickedButtonE();
+	afx_msg void OnBnClickedButtonPi();
+	afx_msg void OnBnClickedButtonF();
+	afx_msg void OnBnClickedButtonPow();
+	afx_msg void OnBnClickedButtonLn();
+	afx_msg void OnBnClickedButtonLg();
+	afx_msg void OnBnClickedButtonSin();
+	afx_msg void OnBnClickedButtonCos();
+	afx_msg void OnBnClickedButtonTan();
+	void checkVisibility(int nID);
 };
 
 #ifndef _DEBUG  // CalculatorView.cpp 中的调试版本
