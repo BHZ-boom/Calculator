@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <cmath>
 #include <numeric>
+#include <algorithm>
 #include "Calculator.h"
 #include "afxdialogex.h"
 #include "CDescribeStat.h"
@@ -65,9 +66,8 @@ BOOL CDescribeStat::OnInitDialog()
 	//m_ListData.SetItemText(nItem, 1, _T("行3列2"));
 	nItem = m_ListData.InsertItem(3, _T("方差"));
 	nItem = m_ListData.InsertItem(4, _T("标准差"));
-	nItem = m_ListData.InsertItem(5, _T("极差"));
-	nItem = m_ListData.InsertItem(6, _T("偏度"));
-	nItem = m_ListData.InsertItem(7, _T("峰度"));
+	nItem = m_ListData.InsertItem(5, _T("偏度"));
+	nItem = m_ListData.InsertItem(6, _T("峰度"));
 	
 	return TRUE;  
 }
@@ -159,7 +159,16 @@ void CDescribeStat::OnBnClickedButtonFile()
 
 		// 求中位数
 		for (short i = 0; i < nFields - 1; ++i) {
-			long double median = dataTable[i][dataTable[i].size() / 2];
+			std::sort(dataTable[i].begin(), dataTable[i].end());
+			size_t n = dataTable[i].size();
+			if (n % 2 == 0) {
+				// 如果数据个数是偶数，返回中间两个数的平均值
+				median[i] = (dataTable[i][n / 2 - 1] + dataTable[i][n / 2]) / 2.0;
+			}
+			else {
+				// 如果数据个数是奇数，返回中间的那个数
+				median[i] = dataTable[i][n / 2];
+			}
 		}
 
 		// 求众数

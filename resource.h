@@ -88,6 +88,7 @@
 #define IDD_DIALOG_DESCRIBE             311
 #define IDD_DIALOG1                     313
 #define IDD_DIALOG_REGRESS              313
+#define IDD_DIALOG_MATRIX               313
 #define IDC_EDIT                        1000
 #define IDC_BUTTON_1                    1001
 #define IDC_BUTTON_2                    1002
@@ -112,21 +113,32 @@
 #define IDC_BUTTON_ADVANCE              1021
 #define IDC_BUTTON1                     1022
 #define IDC_BUTTON_FILE                 1022
+#define IDC_BUTTON_RIGHTP               1023
+#define IDC_BUTTON_MUL                  1024
+#define IDC_BUTTON3                     1024
+#define IDC_BUTTON_LEFTP                1025
 #define IDC_STATIC_MEAN                 1030
 #define IDC_LIST_DATA                   1035
-#define IDC_SCROLLBAR1                  1037
+#define IDC_EDIT1                       1039
+#define IDC_EDIT2                       1040
+#define IDC_STATIC_A                    1041
+#define IDC_STATIC_A2                   1042
+#define IDC_EDIT3                       1043
+#define IDC_STATIC_A3                   1044
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_STAT_DESCRIBE                32773
 #define ID_STAT_REGRESS                 32774
+#define ID_STAT_M                       32778
+#define ID_STAT_MATRIX                  32779
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
-#define _APS_NEXT_COMMAND_VALUE         32778
-#define _APS_NEXT_CONTROL_VALUE         1038
+#define _APS_NEXT_COMMAND_VALUE         32780
+#define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -88,6 +88,10 @@ public:
 	afx_msg void OnBnClickedCheckFraction();
 	afx_msg void OnStatDescribe();
 	afx_msg void OnBnClickedButtonFile();
+	afx_msg void OnStatRegress();
+	afx_msg void OnStatMatrix();
+	afx_msg void OnBnClickedButtonRightp();
+	afx_msg void OnBnClickedButtonLeftp();
 };
 
 #ifndef _DEBUG  // CalculatorView.cpp 中的调试版本

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 #include <afxdb.h>
-#include <math.h>
+
 
 // CDescribeStat 对话框
 

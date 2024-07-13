@@ -5,7 +5,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "CDescribeStat.h"
-#include "CRegress.h"
+#include "CMatrixManip.h"
 // SHARED_HANDLERS 可以在实现预览、缩略图和搜索筛选器句柄的
 // ATL 项目中进行定义，并允许与该项目共享文档代码。
 #ifndef SHARED_HANDLERS
@@ -54,7 +54,12 @@ BEGIN_MESSAGE_MAP(CCalculatorView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_ADVANCE, &CCalculatorView::OnBnClickedButtonAdvance)
 	ON_BN_CLICKED(IDC_CHECK_FRACTION, &CCalculatorView::OnBnClickedCheckFraction)
 	ON_COMMAND(ID_STAT_DESCRIBE, &CCalculatorView::OnStatDescribe)
-	ON_BN_CLICKED(IDC_BUTTON_FILE, &CCalculatorView::OnBnClickedButtonFile)
+	
+	
+	
+	ON_COMMAND(ID_STAT_MATRIX, &CCalculatorView::OnStatMatrix)
+	ON_BN_CLICKED(IDC_BUTTON_RIGHTP, &CCalculatorView::OnBnClickedButtonRightp)
+	ON_BN_CLICKED(IDC_BUTTON_LEFTP, &CCalculatorView::OnBnClickedButtonLeftp)
 END_MESSAGE_MAP()
 
 // CCalculatorView 构造/析构
@@ -250,6 +255,7 @@ void CCalculatorView::OnBnClickedButtonslash()
 }
 
 
+
 void CCalculatorView::OnBnClickedButtonPlus()
 {
 	m_input += _T("+");
@@ -326,6 +332,17 @@ void CCalculatorView::OnBnClickedButtonAc()
 	UpdateData(FALSE);
 }
 
+void CCalculatorView::OnBnClickedButtonRightp()
+{
+	m_input += _T(")");
+	UpdateData(FALSE);
+}
+
+void CCalculatorView::OnBnClickedButtonLeftp()
+{
+	m_input += _T("(");
+	UpdateData(FALSE);
+}
 
 void CCalculatorView::OnBnClickedButtonAdvance()
 {
@@ -357,8 +374,16 @@ void CCalculatorView::OnStatDescribe()
 
 }
 
-
-void CCalculatorView::OnBnClickedButtonFile()
+void CCalculatorView::OnStatMatrix()
 {
-	
+	CMatrixManip mm;
+	if (mm.DoModal() == IDOK) {
+		// 用户点击了OK，处理数据
+	}
 }
+
+
+
+
+
+

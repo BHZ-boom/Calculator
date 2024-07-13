@@ -189,7 +189,7 @@
     <ClInclude Include="CalculatorView.h" />
     <ClInclude Include="CDescribeStat.h" />
     <ClInclude Include="ClassView.h" />
-    <ClInclude Include="CRegress.h" />
+    <ClInclude Include="CMatrixManip.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="Fraction.h" />
     <ClInclude Include="framework.h" />
@@ -207,7 +207,7 @@
     <ClCompile Include="CalculatorView.cpp" />
     <ClCompile Include="CDescribeStat.cpp" />
     <ClCompile Include="ClassView.cpp" />
-    <ClCompile Include="CRegress.cpp" />
+    <ClCompile Include="CMatrixManip.cpp" />
     <ClCompile Include="DoWithString.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="Fraction.cpp" />
