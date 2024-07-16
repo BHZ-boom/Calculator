@@ -388,7 +388,6 @@ void CCalculatorView::OnBnClickedButtonAdvance()
 	checkVisibility(IDC_BUTTON_LEFTP);
 	checkVisibility(IDC_BUTTON_RIGHTP);
 	checkVisibility(IDC_BUTTON_Lg);
-
 }
 
 
@@ -401,10 +400,8 @@ void CCalculatorView::OnBnClickedCheckFraction()
 void CCalculatorView::OnStatDescribe()
 {
 	CDescribeStat ds;
-	if (ds.DoModal() == IDOK) {
-		// 用户点击了OK，处理数据
-	}
-
+	ds.DoModal();
+		
 }
 
 void CCalculatorView::OnStatMatrix()

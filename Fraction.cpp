@@ -47,12 +47,9 @@ Fraction::Fraction(long double decimal) {
         m_numerator = intPart;
     }
     else {
-        double intPart;
-        double fracPart = modf(decimal, &intPart);
         const long precision = 1000000; // 定义精度
-        this->m_numerator = static_cast<long long>(round((intPart + fracPart) * precision));
+        this->m_numerator = static_cast<long long>(round(decimal * precision));
         this->m_denominator = precision;
-
     }
     this->gcd();
 }

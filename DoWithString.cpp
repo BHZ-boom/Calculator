@@ -124,15 +124,20 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
 
     for (int i = 0; i < expression.GetLength(); i++) {
         // Current token is a whitespace, skip it
-        if (expression[i] == ' ') continue;
+        if (expression[i] == ' ' || expression[i] == ',') continue;
 
-        // Current token is a number, push it to stack for numbers
+        // 当前字符是数字，推入栈
         else if (isdigit(expression[i])) {
             long double val = 0,val1=0;
-            // There may be more than one digits in number
+            // 一个数可能不止一位
             BOOL ifDecimal = FALSE;
             long  decimalDigit = 1; //小数位数
-            while (i < expression.GetLength() && (isdigit(expression[i]) || expression[i] == L'.')) {
+            while (i < expression.GetLength() && 
+                (isdigit(expression[i]) || expression[i] == L'.' || expression[i] == L',')  ) {
+                if (expression[i] == L',') {
+                    i++;
+                    continue;
+                }
                 if (expression[i] == L'.') {
                     ifDecimal = TRUE;
                     i++;
@@ -148,7 +153,7 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
             }
             else if (mode == 2) {
 
-                if (expression[i] == '/') {
+                if (expression[i] == '/') { 
                     i++;
                     ifDecimal = FALSE;
                     decimalDigit = 1; 

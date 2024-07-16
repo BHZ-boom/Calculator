@@ -134,8 +134,9 @@
 #define IDC_STATIC_A2                   1042
 #define IDC_EDIT3                       1043
 #define IDC_STATIC_A3                   1044
-#define IDC_BUTTON2                     1044
 #define IDC_BUTTON_BEGIN                1044
+#define IDC_BUTTON2                     1045
+#define IDC_BUTTON_SAVE                 1045
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_STAT_DESCRIBE                32773
@@ -149,7 +150,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1046
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

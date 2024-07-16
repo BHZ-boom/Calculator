@@ -1,6 +1,5 @@
 ﻿
 // CalculatorView.h: CCalculatorView 类的接口
-//
 #pragma once
 
 class CCalculatorView : public CFormView

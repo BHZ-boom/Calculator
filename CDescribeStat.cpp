@@ -40,8 +40,8 @@ void CDescribeStat::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDescribeStat, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CDescribeStat::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON_FILE, &CDescribeStat::OnBnClickedButtonFile)
-	ON_EN_CHANGE(IDC_EDIT1, &CDescribeStat::OnEnChangeEdit1)
 	ON_BN_CLICKED(IDC_BUTTON_BEGIN, &CDescribeStat::OnBnClickedButtonBegin)
+	ON_BN_CLICKED(IDC_BUTTON_SAVE, &CDescribeStat::OnBnClickedButtonSave)
 END_MESSAGE_MAP()
 
 
@@ -94,26 +94,12 @@ void CDescribeStat::OnBnClickedButtonFile()
 	if (dlg.DoModal() == IDOK)
 	{
 		dbFilePath = dlg.GetPathName(); // 获取选择的文件路径
-		// 可以在这里使用filePath，例如显示在一个文本框中或处理文件
 	}
 	m_dbLink = L"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + dbFilePath;
 	if (db.OpenEx(m_dbLink))
 	{
 		MessageBox(L"成功导入数据库！接下来请填写要统计的表", L"成功", MB_OK);
 	}
-	
-
-}
-
-
-void CDescribeStat::OnEnChangeEdit1()
-{
-	// TODO:  如果该控件是 RICHEDIT 控件，它将不
-	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
-	// 函数并调用 CRichEditCtrl().SetEventMask()，
-	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
-
-	// TODO:  在此添加控件通知处理程序代码
 }
 
 
@@ -286,5 +272,56 @@ void CDescribeStat::OnBnClickedButtonBegin()
 		errorMessage.Format(_T("Database error: %s"), e->m_strError);
 		AfxMessageBox(errorMessage);
 		e->Delete();
+	}
+}
+
+
+void CDescribeStat::OnBnClickedButtonSave()
+{
+	// 创建保存文件对话框
+	CFileDialog dlg(FALSE, _T(".txt"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		_T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*||"), NULL);
+	if (dlg.DoModal() == IDOK)
+	{
+		// 获取文件名
+		CString pathName = dlg.GetPathName();
+
+		// 创建并打开文件
+		CStdioFile file;
+		if (file.Open(pathName, CFile::modeCreate | CFile::modeWrite))
+		{
+			// 获取列数
+			int nColumnCount = m_ListData.GetHeaderCtrl()->GetItemCount();
+
+			// 读取并写入数据
+			CString strData, strTemp;
+			int nItemCount = m_ListData.GetItemCount();
+			for (int i = 0; i < nItemCount; ++i)
+			{
+				strData.Empty();
+				for (int j = 0; j < nColumnCount; ++j)
+				{
+					strTemp = m_ListData.GetItemText(i, j);
+					strData += strTemp + _T("\t");  // 使用制表符作为列分隔符
+				}
+				strData.TrimRight(_T("\t"));  // 移除最后一个制表符
+				strData += _T("\n");          // 添加换行符
+				// 写入UTF-8 BOM (Byte Order Mark)
+				static const unsigned char UTF8_BOM[] = { 0xEF, 0xBB, 0xBF };
+				file.Write(UTF8_BOM, sizeof(UTF8_BOM));
+
+				// 转换CString到UTF-8
+				CT2CA pszConvertedString(strData, CP_UTF8);
+				file.Write((const char*)pszConvertedString, strlen(pszConvertedString));    // 写入文件
+			}
+
+			// 关闭文件
+			file.Close();
+			AfxMessageBox(_T("数据已保存到文件"));
+		}
+		else
+		{
+			AfxMessageBox(_T("无法创建文件"));
+		}
 	}
 }

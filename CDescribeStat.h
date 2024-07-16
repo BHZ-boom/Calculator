@@ -24,14 +24,11 @@ protected:
 	BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedOk();
-	afx_msg void OnBnClickedButtonFile();
-	
 	CListCtrl m_ListData;
-	CListBox m_listBoxTables;
-	afx_msg void OnEnChangeEdit1();
-	
 	CString m_dbLink;
-	afx_msg void OnBnClickedButtonBegin();
 	CString m_sheetName;
+	afx_msg void OnBnClickedButtonFile();
+	afx_msg void OnBnClickedButtonBegin();
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedButtonSave();
 };
