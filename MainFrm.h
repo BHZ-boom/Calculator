@@ -56,6 +56,7 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+	CString m_strWindowTitle;
 };
 
 

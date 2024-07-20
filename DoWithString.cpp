@@ -85,6 +85,14 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                     expression.Insert(i, L"*");
                 }
             }
+            if (expression[i] == '-' && i == 0) {
+                expression.Insert(i, L"(0");
+                expression.Insert(i + 4, L")");
+            }
+            else if (expression[i] == '-' && !isdigit(expression[i - 1])) {
+                expression.Insert(i, L"(0");
+                expression.Insert(i+4, L")");
+            }
         }
 
         if (expression[i] == 'e') {
@@ -152,39 +160,15 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                 values.push(val);
             }
             else if (mode == 2) {
-
-                if (expression[i] == '/') { 
-                    i++;
-                    ifDecimal = FALSE;
-                    decimalDigit = 1; 
-                    while (i < expression.GetLength() && (isdigit(expression[i]) || expression[i] == L'.')) {
-                        if (expression[i] == L'.') {
-                            ifDecimal = TRUE;
-                            i++;
-                            continue;
-                        }
-                        val1 = (val1 * 10) + (expression[i] - '0');
-                        if (ifDecimal) decimalDigit *= 10;
-                        i++;
-                    }
-                    val1 /= decimalDigit;
-                    fvalues.push(Fraction(val / val1));
-                }
-                else {
                     fvalues.push(Fraction(val));
-                }
-           
             }
-            
-            i--; // since the for loop also increases i
+            i--; 
         }
 
-        // Current token is an opening brace, push it to 'ops'
         else if (expression[i] == '(') {
             ops.push(expression[i]);
         }
 
-        // Closing brace encountered, solve entire brace
         else if (expression[i] == ')') {
             while (!ops.empty() && ops.top() != '(') {
                 long double val2 = values.top();
@@ -199,7 +183,6 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                 values.push(applyOp(val1, val2, op));
             }
 
-            // pop opening brace.
             ops.pop();
         }
         else if (expression[i] == '!') 
@@ -207,12 +190,7 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
             long double val = values.top();
             values.push(factorial(val));
         }
-
-        // Current token is an operator.
         else {
-            // While top of 'ops' has same or greater precedence to current
-            // token, which is an operator. Apply operator on top of 'ops'
-            // to top two elements in values stack.
             wchar_t opt = expression[i];
             if (opt == L'\u00D7') {
                 opt = '*';
@@ -261,13 +239,9 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                     }
                 } 
             }
-
-            // Push current token to 'ops'.
             ops.push(opt);
         }
     }
-
-    // Entire expression has been parsed at this point, apply remaining ops to remaining values
     while (!ops.empty()) {
         wchar_t op = ops.top();
         ops.pop();
@@ -277,13 +251,13 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
                 values.pop();
                 values.push(applyOp(num, (long double)0, op));
             }
+           
             else
             {
                 long double val1, val2;
 
                 val2 = values.top();
                 values.pop();
-
                 val1 = values.top();
                 values.pop();
                 values.push(applyOp(val1, val2, op));
@@ -309,8 +283,6 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
             }
         }
     }
-
-    // Top of 'values' contains result, return it
     if (mode == 1) {
         ConvertDouble(values.top(), expression);
     }
@@ -320,7 +292,13 @@ void CCalculatorView::evaluate(CString& expression, int mode) {
             expression.Format(_T("%lld"), result.up());
         }
         else {
-            expression.Format(_T("%lld/%lld"), result.up(), result.down());
+            //if (result.down() < 0) {
+             //   expression.Format(_T("%lld/%lld"), -result.up(), -result.down());
+            //}
+            //else {
+                expression.Format(_T("%lld/%lld"), result.up(), result.down());
+            //}
+         
         }
        
     }

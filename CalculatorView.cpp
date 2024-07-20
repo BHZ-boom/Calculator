@@ -316,18 +316,20 @@ void CCalculatorView::OnBnClickedButtonEqual()
 void CCalculatorView::OnEnChangeEdit()
 {
 	int length = m_input.GetLength();
-	wchar_t last = m_input[length - 1], second = m_input[length - 2];
-	if (second == L'+' || second == L'\u00D7' || second == L'\u00F7') {
-		if (last == L'+' || last == L'\u00D7' || last == L'\u00F7') {
-			m_input.Delete(length - 2);
-		} 
-		else if (last == L'-') {
-			m_input.Insert(length - 1, L'(');
-		}	
-	}
-	else if (second == L'-') {
-		if (last == L'-' || last == L'+' || last == L'\u00D7' || last == L'\u00F7') {
-			m_input.Delete(length - 2);
+	if (length >= 2) {
+		wchar_t last = m_input[length - 1], second = m_input[length - 2];
+		if (second == L'+' || second == L'\u00D7' || second == L'\u00F7') {
+			if (last == L'+' || last == L'\u00D7' || last == L'\u00F7') {
+				m_input.Delete(length - 2);
+			}
+			else if (last == L'-') {
+				m_input.Insert(length - 1, L'(');
+			}
+		}
+		else if (second == L'-') {
+			if (last == L'-' || last == L'+' || last == L'\u00D7' || last == L'\u00F7') {
+				m_input.Delete(length - 2);
+			}
 		}
 	}
 	UpdateData(FALSE);
